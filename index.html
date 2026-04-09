@@ -3,57 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Systems CR Tracker | Live Dashboard</title>
+    <title>Systems CR Tracker | Final Fix</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; color: #1e293b; }
-        .stat-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #e2e8f0; }
-        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.05); }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; }
+        .stat-card { border: 1px solid #e2e8f0; transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-4px); }
     </style>
 </head>
-<body class="p-4 md:p-10 min-h-screen">
+<body class="p-4 md:p-10">
 
     <div class="max-w-6xl mx-auto">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
             <div>
-                <h1 class="text-4xl font-black text-slate-900 tracking-tight">Systems CR Tracker</h1>
-                <div class="flex items-center gap-2 mt-2">
-                    <div id="status-dot" class="h-2 w-2 bg-slate-300 rounded-full animate-pulse"></div>
-                    <p id="api-status" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Initializing...</p>
-                </div>
+                <h1 class="text-3xl font-black text-slate-900 tracking-tight">Systems CR Tracker</h1>
+                <p id="api-status" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1 italic">Connected via Direct Sync</p>
             </div>
-            <div class="flex gap-3 w-full md:w-auto">
-                <button onclick="loadData()" class="p-4 bg-white rounded-2xl border border-slate-200 hover:bg-slate-50 transition">
+            <div class="flex gap-3">
+                <button onclick="loadData()" class="p-4 bg-white rounded-2xl border border-slate-200 hover:bg-slate-50">
                     <i data-lucide="refresh-cw" id="sync-icon" class="w-5 h-5 text-slate-600"></i>
                 </button>
-                <button onclick="document.getElementById('modal').classList.remove('hidden')" class="flex-1 md:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-2xl font-bold shadow-xl shadow-indigo-100 transition-all active:scale-95">
+                <button onclick="document.getElementById('modal').classList.remove('hidden')" class="bg-indigo-600 text-white px-8 py-4 rounded-2xl font-bold shadow-lg shadow-indigo-100 transition hover:bg-indigo-700">
                     + New Entry
                 </button>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 text-center md:text-left">
-            <div class="stat-card bg-white p-8 rounded-[2.5rem]">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div class="stat-card bg-white p-8 rounded-[2rem]">
                 <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Total CRs</p>
-                <h2 id="total-val" class="text-5xl font-black mt-2 tracking-tighter">0</h2>
+                <h2 id="total-val" class="text-4xl font-black mt-2">0</h2>
             </div>
-            <div class="stat-card bg-indigo-600 p-8 rounded-[2.5rem] text-white shadow-2xl shadow-indigo-100">
+            <div class="stat-card bg-indigo-600 p-8 rounded-[2rem] text-white">
                 <p class="text-indigo-200 text-[10px] font-bold uppercase tracking-widest">Total Hours</p>
-                <h2 id="hours-val" class="text-5xl font-black mt-2 tracking-tighter">0h</h2>
+                <h2 id="hours-val" class="text-4xl font-black mt-2">0h</h2>
             </div>
-            <div class="stat-card bg-white p-8 rounded-[2.5rem]">
-                <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">In Progress</p>
-                <h2 id="dev-val" class="text-5xl font-black mt-2 tracking-tighter text-blue-600">0</h2>
+            <div class="stat-card bg-white p-8 rounded-[2rem]">
+                <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">In Dev</p>
+                <h2 id="dev-val" class="text-4xl font-black mt-2">0</h2>
             </div>
-            <div class="stat-card bg-white p-8 rounded-[2.5rem]">
+            <div class="stat-card bg-white p-8 rounded-[2rem]">
                 <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Completed</p>
-                <h2 id="done-val" class="text-5xl font-black mt-2 tracking-tighter text-emerald-600">0</h2>
+                <h2 id="done-val" class="text-4xl font-black mt-2">0</h2>
             </div>
         </div>
 
-        <div class="bg-white rounded-[3rem] border border-slate-200 shadow-sm overflow-hidden">
+        <div class="bg-white rounded-[2.5rem] border border-slate-200 shadow-sm overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
                     <thead class="bg-slate-50 border-b border-slate-100">
@@ -64,122 +61,66 @@
                             <th class="px-10 py-6">Status</th>
                         </tr>
                     </thead>
-                    <tbody id="table-body" class="divide-y divide-slate-50 text-sm font-medium">
-                        </tbody>
+                    <tbody id="table-body" class="divide-y divide-slate-50 text-sm">
+                        <tr><td colspan="4" class="p-10 text-center text-slate-400">Fetching data from Google Sheets...</td></tr>
+                    </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <div id="modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-[3rem] w-full max-w-lg p-10 shadow-2xl">
-            <h2 class="text-3xl font-black mb-6">New Record</h2>
+    <div id="modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2.5rem] w-full max-w-lg p-10 shadow-2xl">
+            <h2 class="text-2xl font-black mb-6">New Record</h2>
             <form id="cr-form" onsubmit="handlePost(event)" class="space-y-4">
                 <input type="text" id="i1" placeholder="CR Number" required class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500">
                 <input type="text" id="i2" placeholder="Requested Team" required class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500">
-                <input type="number" id="i3" placeholder="Commitment Hours" required class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500">
+                <input type="number" id="i3" placeholder="Hours" required class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500">
                 <select id="i4" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 focus:ring-indigo-500">
                     <option>To Be Assigned</option>
                     <option>Development In Progress</option>
                     <option>Completed</option>
                 </select>
                 <textarea id="i5" placeholder="Details" required class="w-full p-4 bg-slate-50 border rounded-2xl h-24 outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
-                <div class="flex gap-4 pt-4">
-                    <button type="submit" id="btn-save" class="flex-1 bg-indigo-600 text-white font-bold py-5 rounded-2xl shadow-xl hover:bg-indigo-700 transition">Save Entry</button>
-                    <button type="button" onclick="document.getElementById('modal').classList.add('hidden')" class="px-10 py-5 bg-slate-100 rounded-2xl font-bold text-slate-500">Cancel</button>
+                <div class="flex gap-3 pt-4">
+                    <button type="submit" id="save-btn" class="flex-1 bg-indigo-600 text-white font-bold py-4 rounded-2xl">Save to Sheet</button>
+                    <button type="button" onclick="document.getElementById('modal').classList.add('hidden')" class="px-8 py-4 bg-slate-100 rounded-2xl font-bold text-slate-500">Cancel</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-        // YOUR NEW URL
-        const RAW_URL = "https://script.google.com/macros/s/AKfycbzDorqUybJXtSuU3PzoMAqVVfFoGHKB-xgvkIMHwci-9K82y9X6692VD4jAs-wRPHlI5w/exec";
-        // CORS Proxy to bypass GitHub security
-        const SCRIPT_URL = "https://corsproxy.io/?" + encodeURIComponent(RAW_URL);
+        // Direct URL - No Proxy
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwGK356S6dBoR5Zd3fVh7FK3jl8nGVMzSrLLR43JbUmHLAxg310-iiheVNZOUvgF0ydfA/exec";
 
-        async function loadData() {
+        // JSONP Logic: Bypass Fetch/CORS completely
+        function loadData() {
             const icon = document.getElementById('sync-icon');
-            icon.classList.add('animate-spin');
+            if(icon) icon.classList.add('animate-spin');
             
-            try {
-                const res = await fetch(SCRIPT_URL);
-                const data = await res.json();
-                
-                const table = document.getElementById('table-body');
-                table.innerHTML = '';
-                let hrsTotal = 0, dev = 0, done = 0;
-
-                data.forEach(item => {
-                    // Normalize keys (removes spaces and lowercase)
-                    const get = (key) => {
-                        const k = Object.keys(item).find(x => x.toLowerCase().replace(/\s/g,'') === key);
-                        return item[k] || "";
-                    };
-
-                    const id = get("crs");
-                    const team = get("requestedteam");
-                    const hours = parseInt(get("commitmenthours")) || 0;
-                    const status = get("crstatus");
-
-                    hrsTotal += hours;
-                    if(status.toLowerCase().includes('dev')) dev++;
-                    if(status.toLowerCase().includes('complet')) done++;
-
-                    table.innerHTML += `
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="px-10 py-6 font-bold text-indigo-700">${id}</td>
-                            <td class="px-10 py-6 text-slate-600 font-semibold">${team}</td>
-                            <td class="px-10 py-6 text-slate-400 font-black">${hours}h</td>
-                            <td class="px-10 py-6">
-                                <span class="px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest ${status.toLowerCase().includes('complet') ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'}">
-                                    ${status}
-                                </span>
-                            </td>
-                        </tr>`;
-                });
-
-                document.getElementById('total-val').innerText = data.length;
-                document.getElementById('hours-val').innerText = hrsTotal + 'h';
-                document.getElementById('dev-val').innerText = dev;
-                document.getElementById('done-val').innerText = done;
-                
-                document.getElementById('api-status').innerText = "Live Sync Active";
-                document.getElementById('status-dot').className = "h-2 w-2 bg-emerald-500 rounded-full";
-
-            } catch (err) {
-                console.error(err);
-                document.getElementById('api-status').innerText = "Sync Failed - Trying Again...";
-            } finally {
-                icon.classList.remove('animate-spin');
-                lucide.createIcons();
-            }
-        }
-
-        async function handlePost(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btn-save');
-            btn.innerText = "Syncing..."; btn.disabled = true;
-
-            const payload = {
-                crs: document.getElementById('i1').value,
-                team: document.getElementById('i2').value,
-                hours: document.getElementById('i3').value,
-                status: document.getElementById('i4').value,
-                details: document.getElementById('i5').value
+            // Create a unique callback name
+            const callbackName = 'google_cb_' + Math.round(100000 * Math.random());
+            
+            window[callbackName] = function(data) {
+                renderUI(data);
+                // Cleanup
+                delete window[callbackName];
+                const scripts = document.querySelectorAll('script[data-type="jsonp"]');
+                scripts.forEach(s => s.remove());
+                if(icon) icon.classList.remove('animate-spin');
             };
 
-            try {
-                // Post directly to RAW_URL (CORS Proxy not needed for POST)
-                await fetch(RAW_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
-                document.getElementById('modal').classList.add('hidden');
-                document.getElementById('cr-form').reset();
-                setTimeout(loadData, 2000);
-            } catch (err) { alert("Error connecting to sheet."); }
-            finally { btn.innerText = "Save Entry"; btn.disabled = false; }
+            const script = document.createElement('script');
+            script.src = SCRIPT_URL + (SCRIPT_URL.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + callbackName;
+            script.setAttribute('data-type', 'jsonp');
+            document.body.appendChild(script);
         }
 
-        window.onload = loadData;
-    </script>
-</body>
-</html>
+        function renderUI(data) {
+            const table = document.getElementById('table-body');
+            table.innerHTML = '';
+            let hrs = 0, dev = 0, done = 0;
+
+            if (!data || data.length === 0) {
+                table.innerHTML = '<tr><td colspan="4" class="p-10 text-center">No records found.</td></tr>
